@@ -1,0 +1,101 @@
+<!doctype html><html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Trip Picker — Happy Birthday, my jaan</title>
+<link rel="stylesheet" href="styles.css"/>
+<script type="module">
+import {spark, show, qs, qsa} from './app.js';
+
+function addToCart(text){
+  const li=document.createElement('li'); li.textContent=text;
+  qs('#cart').appendChild(li);
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // Destination choices
+  const destBox=qs('#destChoices'), destPicked=qs('#destPicked'), applauseDest=qs('#applauseDest');
+  let chosenDest=null;
+  destBox.addEventListener('click',(e)=>{
+    const pill=e.target.closest('.pill'); if(!pill) return;
+    qsa('#destChoices .pill').forEach(p=>p.classList.remove('selected'));
+    pill.classList.add('selected'); chosenDest=pill.dataset.dest;
+    destPicked.textContent=chosenDest; show(applauseDest); spark(applauseDest);
+    addToCart('Destination: '+chosenDest);
+  });
+
+  // Activities
+  qs('#activityChoices').addEventListener('click',(e)=>{
+    const b=e.target.closest('button[data-activity]'); if(!b) return;
+    const name=b.dataset.activity;
+    qs('#actPicked').textContent=name; show(qs('#applauseAct')); spark(qs('#applauseAct'));
+    addToCart('Activity: '+name);
+  });
+
+  // Continue
+  qs('#toFinale').addEventListener('click',()=>{ window.location.href='finale.html'; });
+});
+</script>
+</head>
+<body>
+  <div class="bg-wrap"><canvas id="stars"></canvas></div>
+  <div class="audio-bar">
+    <span>Audio</span>
+    <button class="btn" id="playAudio" type="button">Play</button>
+    <button class="btn ghost" id="pauseAudio" type="button">Pause</button>
+    <audio id="bg-audio" src="audio/music.mp3" loop></audio>
+  </div>
+
+  <nav>
+    <div class="container">
+      <div class="tabs">
+        <a data-nav href="index.html">Start</a>
+        <a data-nav href="love.html">Us</a>
+        <a data-nav href="prompts.html">Prompts</a>
+        <a data-nav href="consent.html">Important Q</a>
+        <a data-nav href="trips.html" class="active">Trip Picker</a>
+        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="finale.html">Finale</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container page">
+    <section class="card">
+      <h2>Build your birthday trip</h2>
+      <p>Choose the destination, then your activities. Expect confetti-grade applause after every pick.</p>
+
+      <h3 style="margin-top:12px">1) Destination</h3>
+      <div class="choices" id="destChoices" style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="pill" data-dest="Vancouver">Vancouver • nature + views</div>
+        <div class="pill" data-dest="Costa Rica">Costa Rica • rainforest vibes</div>
+        <div class="pill" data-dest="Las Vegas">Las Vegas • cars + Sphere</div>
+        <div class="pill" data-dest="Japan">Japan • JDM dream</div>
+      </div>
+      <div class="applause" id="applauseDest" style="margin-top:8px">
+        <span>🎉</span><span>Locked in: <b id="destPicked">–</b></span>
+      </div>
+
+      <h3 style="margin-top:16px">2) What are we doing there?</h3>
+      <div class="choices" id="activityChoices" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" data-activity="Scenic hike">Scenic hike</button>
+        <button class="btn" data-activity="Track day / go‑karts">Track day / go‑karts</button>
+        <button class="btn" data-activity="Sphere show or night lights">Sphere show or night lights</button>
+        <button class="btn" data-activity="Sushi + car culture tour">Sushi + car culture tour</button>
+        <button class="btn" data-activity="Aggressively rate clouds 1–10">Aggressively rate clouds 1–10</button>
+        <button class="btn" data-activity="Speed‑walk like NPCs">Speed‑walk like NPCs</button>
+        <button class="btn" data-activity="Buy one single lug nut as a souvenir">Buy one single lug nut as a souvenir</button>
+      </div>
+      <div class="applause" id="applauseAct" style="margin-top:8px">
+        <span>👏</span><span>Added: <b id="actPicked">–</b></span>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>Trip Cart</h3>
+        <p class="muted">A balanced allocation of thrill and chill.</p>
+        <ul id="cart" style="margin:6px 0 0 18px"></ul>
+        <button class="btn success" id="toFinale" style="margin-top:10px">All set — take me to the fireworks</button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

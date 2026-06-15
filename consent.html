@@ -1,0 +1,58 @@
+<!doctype html><html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Important Q — Happy Birthday, my jaan</title>
+<link rel="stylesheet" href="styles.css"/>
+<script type="module">
+import {spark, show, qs} from './app.js';
+window.addEventListener('DOMContentLoaded',()=>{
+  const yes=qs('#yes2'), no=qs('#no2'), applause=qs('#applause1'), bounds=qs('.no-escape');
+  no.addEventListener('mouseover',()=>{
+    const rect=bounds.getBoundingClientRect();
+    const x=Math.random()*(rect.width-120);
+    const y=Math.random()*(rect.height-44);
+    no.style.position='absolute'; no.style.left=x+'px'; no.style.top=y+'px';
+  });
+  yes.addEventListener('click',()=>{ show(applause); spark(applause); setTimeout(()=>window.location.href='trips.html',380); });
+  no.addEventListener('focus',()=>no.dispatchEvent(new Event('mouseover')));
+});
+</script>
+</head>
+<body>
+  <div class="bg-wrap"><canvas id="stars"></canvas></div>
+  <div class="audio-bar">
+    <span>Audio</span>
+    <button class="btn" id="playAudio" type="button">Play</button>
+    <button class="btn ghost" id="pauseAudio" type="button">Pause</button>
+    <audio id="bg-audio" src="audio/music.mp3" loop></audio>
+  </div>
+
+  <nav>
+    <div class="container">
+      <div class="tabs">
+        <a data-nav href="index.html">Start</a>
+        <a data-nav href="love.html">Us</a>
+        <a data-nav href="prompts.html">Prompts</a>
+        <a data-nav href="consent.html" class="active">Important Q</a>
+        <a data-nav href="trips.html">Trip Picker</a>
+        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="finale.html">Finale</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container page">
+    <section class="card">
+      <h2>So… will you celebrate with me on July 4?</h2>
+      <p>If you click “No”, something funny might happen.</p>
+      <div class="choices no-escape" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;position:relative;height:60px">
+        <button class="btn success" id="yes2">Yes, obviously</button>
+        <button class="btn" id="no2">No (this button is shy)</button>
+      </div>
+      <div class="applause" id="applause1" style="margin-top:10px">
+        <span>👏</span><span>Excellent choice, Mr. Fintech.</span>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
