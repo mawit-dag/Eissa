@@ -1,0 +1,93 @@
+<!doctype html><html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Happy Birthday, my jaan</title>
+<link rel="stylesheet" href="styles.css"/>
+<script type="module">
+import {spark, qs, burstConfetti} from './app.js';
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const t=qs('#celeIndex');
+  let i=0, seq=[0.42,1.37,2.85,4.20,6.90,10.00,12.34];
+  const tick=()=>{ if(i<seq.length){ t.textContent=`+${seq[i++].toFixed(2)}%`; setTimeout(tick, 500);} };
+  setTimeout(tick,700);
+
+  const yes=qs('#yesIntro'), no=qs('#noIntro'), msg=qs('#noMsg');
+  yes.addEventListener('click',()=>{
+    msg.textContent='Good choice 😌';
+    spark(msg);
+    burstConfetti();
+    setTimeout(()=>window.location.href='love.html',500);
+  });
+  no.addEventListener('mouseenter',()=>{
+    yes.style.transform='scale(1.25)';
+    no.style.transform='scale(0.85)';
+  });
+  no.addEventListener('click',()=>{
+    no.style.opacity='0';
+    no.style.pointerEvents='none';
+    msg.textContent='Hmm. That option seems unavailable.';
+  });
+});
+</script>
+</head>
+<body>
+  <div class="bg-wrap"><canvas id="stars"></canvas></div>
+
+  <div class="audio-bar">
+    <span>Audio</span>
+    <button class="btn" id="playAudio" type="button">Play</button>
+    <button class="btn ghost" id="pauseAudio" type="button">Pause</button>
+    <audio id="bg-audio" src="audio/music.mp3" loop></audio>
+  </div>
+
+  <nav>
+    <div class="container">
+      <div class="tabs">
+        <a data-nav href="start.html" class="active">Start</a>
+        <a data-nav href="love.html">Us</a>
+        <a data-nav href="prompts.html">Prompts</a>
+        <a data-nav href="consent.html">Important Q</a>
+        <a data-nav href="trips.html">Trip Picker</a>
+        <a data-nav href="gallery.html">Love Letter</a>
+        <a data-nav href="finale.html">Finale</a>
+        <a data-nav href="credits.html">Credits</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container page">
+    <header class="card hero-glow">
+      <div class="fintech-card" aria-live="polite">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
+          <div>
+            <div class="muted">Issa x Dagma • Celebration Index</div>
+            <div style="font-size:28px;margin-top:6px"><span class="ticker" id="celeIndex">+0.00%</span></div>
+          </div>
+          <div class="muted" style="text-align:right">
+            Portfolio: Love, Laughter, Travel<br/>Risk Level: Dangerously Cute
+          </div>
+        </div>
+      </div>
+
+      <h1 style="margin-top:16px">Happy Birthday, my jaan 💖</h1>
+
+      <div class="video-frame card">
+        <video src="videos/baby-start.mp4" controls playsinline></video>
+      </div>
+
+      <div class="card center">
+        <h2>Ready for your birthday surprise?</h2>
+        <div class="choices" style="justify-content:center">
+          <button class="btn success big" id="yesIntro">Yes ✅</button>
+          <button class="btn big" id="noIntro">No ❌</button>
+        </div>
+        <div class="muted" id="noMsg" style="margin-top:10px;min-height:20px"></div>
+      </div>
+    </header>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
