@@ -1,76 +1,110 @@
 <!doctype html><html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Prompts — Happy Birthday, my jaan</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Prompts</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {spark, show, qs} from './app.js';
-
-function save(key, value){
-  const data = JSON.parse(localStorage.getItem('issaAnswers')||'{}');
-  data[key]=value; localStorage.setItem('issaAnswers', JSON.stringify(data));
-}
+import {spark, show, qs, saveAnswer, burstConfetti} from './app.js';
 
 window.addEventListener('DOMContentLoaded',()=>{
-  // I learned how to code for you
-  qs('#codeYes').addEventListener('click',()=>{
-    qs('#codeResp').textContent="I knew my baby was smart — you're hired!!!";
-    show(qs('#applauseCode')); spark(qs('#applauseCode'));
-    save('learnedToCode','Yes (you’re hired!!!)');
+  // Does my baby feel special?
+  const feelYes=qs('#feelYes');
+  const feelNo=qs('#feelNo');
+  feelYes.addEventListener('click',()=>{
+    qs('#feelMsg').textContent="As you should 😌";
+    show(qs('#applauseFeel')); spark(qs('#applauseFeel'));
+    saveAnswer('doesMyBabyFeelSpecial', 'Yes');
   });
-  qs('#codeNo').addEventListener('click',()=>{
-    qs('#codeResp').textContent="Okay fine... definitely used AI 😅";
-    show(qs('#applauseCode')); spark(qs('#applauseCode'));
-    save('learnedToCode','No (definitely used AI)');
-  });
-
-  // Do you feel special? No turns to Yes
-  const feelYes=qs('#feelYes'), feelNo=qs('#feelNo');
   feelNo.addEventListener('click',()=>{
     feelNo.textContent='Yes';
     feelNo.classList.add('success');
-    qs('#feelMsg').textContent="Corrected. Special™ confirmed.";
+    qs('#feelMsg').textContent="Correct answer restored.";
     show(qs('#applauseFeel')); spark(qs('#applauseFeel'));
-    save('feelSpecial','Yes (button converted)');
-  });
-  feelYes.addEventListener('click',()=>{
-    qs('#feelMsg').textContent="Yesss. As you should.";
-    show(qs('#applauseFeel')); spark(qs('#applauseFeel'));
-    save('feelSpecial','Yes');
+    saveAnswer('doesMyBabyFeelSpecial', 'Yes (button corrected)');
   });
 
-  // Do you love me — any choice triggers funny message
+  // How much do you love Dagma?
   document.querySelectorAll('[data-love]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const choice=btn.getAttribute('data-love');
-      const options=[
-        "wowwww I can’t believe you picked that and not this 🤯",
-        "interesting alpha pick… not the meta tho 😂",
-        "diversified answer — bold strategy 👀"
-      ];
-      qs('#loveMsg').textContent = options[Math.floor(Math.random()*options.length)];
+      if(choice === 'This is not about you, Dagmaaaa'){
+        qs('#loveMsg').textContent = 'who else is it about then ?🤨';
+      } else {
+        qs('#loveMsg').textContent = 'wowww only that?😩';
+      }
       show(qs('#applauseLove')); spark(qs('#applauseLove'));
-      save('loveAnswer', choice);
+      saveAnswer('howMuchDoYouLoveDagma', choice);
     });
   });
 
-  // What are you most looking forward to? free text
-  qs('#lookForm').addEventListener('submit',(e)=>{
+  // Cake flavor
+  qs('#cakeForm').addEventListener('submit',(e)=>{
     e.preventDefault();
-    const val = qs('#lookText').value.trim();
+    const val = qs('#cakeText').value.trim();
     if(!val) return;
-    save('mostLookingForward', val);
-    qs('#lookSaved').textContent="Saved! I’ll treasure this.";
-    show(qs('#applauseLook')); spark(qs('#applauseLook'));
-    qs('#lookText').value='';
+    saveAnswer('favoriteCakeFlavor', val);
+    qs('#cakeSaved').textContent='Saved 🍰';
+    show(qs('#applauseCake')); spark(qs('#applauseCake'));
   });
 
-  qs('#toConsent').addEventListener('click',()=>window.location.href='consent.html');
+  // First date outfit
+  document.querySelectorAll('[data-datefit]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ans = btn.dataset.datefit;
+      saveAnswer('firstDateOutfitGuess', ans);
+      if(ans === 'black and grey'){
+        qs('#datefitMsg').textContent = 'Yessss you got it 😌';
+        show(qs('#applauseDatefit')); spark(qs('#applauseDatefit'));
+      } else {
+        const boo = qs('#booDatefit');
+        boo.style.display = 'block';
+        qs('#datefitMsg').textContent = 'Incorrect 😭';
+        setTimeout(()=>boo.style.display='none', 1200);
+      }
+    });
+  });
+
+  // Age question runaway buttons except correct one
+  const ageWrap = qs('#ageWrap');
+  document.querySelectorAll('[data-runaway]').forEach(btn=>{
+    btn.addEventListener('mouseover',()=>{
+      const rect = ageWrap.getBoundingClientRect();
+      const x = Math.random() * Math.max(20, rect.width - 170);
+      const y = Math.random() * Math.max(20, rect.height - 60);
+      btn.style.position = 'absolute';
+      btn.style.left = x + 'px';
+      btn.style.top = y + 'px';
+    });
+  });
+  qs('#correctAge').addEventListener('click',()=>{
+    qs('#ageMsg').textContent = 'Exactlyyyyy 😂';
+    show(qs('#applauseAge')); spark(qs('#applauseAge'));
+    saveAnswer('howOldAreYouTurning', 'old enough to be your daddy');
+  });
+
+  // I learned how to code for you - comes last
+  qs('#codeYes').addEventListener('click',()=>{
+    qs('#codeResp').textContent="Devin is fired 😌";
+    show(qs('#applauseCode')); spark(qs('#applauseCode'));
+    saveAnswer('learnedHowToCode', 'I knew my baby was smart-you are hired and Devin is fired!!');
+  });
+  qs('#codeNo').addEventListener('click',()=>{
+    qs('#codeResp').textContent="Lmaooo fair 🤨";
+    show(qs('#applauseCode')); spark(qs('#applauseCode'));
+    saveAnswer('learnedHowToCode', 'nahhh-I’m sure u used ai 🤨');
+  });
+
+  qs('#toConsent').addEventListener('click',()=>{
+    burstConfetti();
+    setTimeout(()=>window.location.href='consent.html', 450);
+  });
 });
 </script>
 </head>
 <body>
   <div class="bg-wrap"><canvas id="stars"></canvas></div>
+
   <div class="audio-bar">
     <span>Audio</span>
     <button class="btn" id="playAudio" type="button">Play</button>
@@ -81,64 +115,94 @@ window.addEventListener('DOMContentLoaded',()=>{
   <nav>
     <div class="container">
       <div class="tabs">
-        <a data-nav href="index.html">Start</a>
+        <a data-nav href="start.html">Start</a>
         <a data-nav href="love.html">Us</a>
         <a data-nav href="prompts.html" class="active">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html">Trip Picker</a>
-        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="gallery.html">Love Letter</a>
         <a data-nav href="finale.html">Finale</a>
+        <a data-nav href="credits.html">Credits</a>
       </div>
     </div>
   </nav>
 
   <div class="container page">
     <section class="card">
-      <h2>I learned how to code for you</h2>
-      <div class="choices" style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn success" id="codeYes">Yes</button>
-        <button class="btn" id="codeNo">No</button>
-      </div>
-      <p id="codeResp" class="muted" style="margin-top:8px"></p>
-      <div class="applause" id="applauseCode" style="margin-top:8px"><span>👏</span><span>Caught in 4K.</span></div>
-    </section>
-
-    <section class="card">
-      <h2>Do you feel special?</h2>
-      <div class="choices" style="display:flex;gap:10px;flex-wrap:wrap">
+      <h2>Does my baby feel special ?</h2>
+      <div class="choices">
         <button class="btn success" id="feelYes">Yes</button>
         <button class="btn" id="feelNo">No</button>
       </div>
-      <p id="feelMsg" class="muted" style="margin-top:8px"></p>
-      <div class="applause" id="applauseFeel" style="margin-top:8px"><span>🎉</span><span>Special mode enabled.</span></div>
+      <p id="feelMsg" class="muted"></p>
+      <div class="applause" id="applauseFeel"><span>✨</span><span>Special mode confirmed.</span></div>
     </section>
 
     <section class="card">
-      <h2>Do you love me?</h2>
-      <div class="choices" style="display:flex;gap:10px;flex-wrap:wrap">
+      <h2>How much do you love Dagma ☺️?</h2>
+      <div class="choices">
         <button class="btn" data-love="Yes I love u so muchhh">Yes I love u so muchhh</button>
         <button class="btn" data-love="I can’t live without u">I can’t live without u</button>
-        <button class="btn" data-love="My dream girl — you are my jaan">My dream girl — you are my jaan</button>
+        <button class="btn" data-love="My dream girl - you are my jaan">My dream girl - you are my jaan</button>
         <button class="btn" data-love="This is not about you, Dagmaaaa">This is not about you, Dagmaaaa</button>
       </div>
-      <p id="loveMsg" class="muted" style="margin-top:8px"></p>
-      <div class="applause" id="applauseLove" style="margin-top:8px"><span>✨</span><span>wowwww I can’t believe you picked that and not this</span></div>
+      <p id="loveMsg" class="muted"></p>
+      <div class="applause" id="applauseLove"><span>💖</span><span>noted.</span></div>
     </section>
 
     <section class="card">
-      <h2>What are you most looking forward to on this trip?</h2>
-      <form id="lookForm">
-        <textarea id="lookText" rows="3" placeholder="Type here…" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:#0f1726;color:var(--text)"></textarea>
+      <h2>What is your favorite flavour cake</h2>
+      <p class="muted">Type your answer.</p>
+      <form id="cakeForm">
+        <textarea id="cakeText" placeholder="Type here..."></textarea>
         <div style="margin-top:8px;display:flex;gap:10px;align-items:center">
           <button class="btn success" type="submit">Save answer</button>
-          <div class="applause" id="applauseLook"><span>👏</span><span id="lookSaved">Saved!</span></div>
+          <div class="applause" id="applauseCake"><span>🍰</span><span id="cakeSaved">Saved</span></div>
         </div>
       </form>
     </section>
 
+    <section class="card">
+      <h2>What colour did I wear on our first date?</h2>
+      <p class="muted">Special prize for this</p>
+      <div class="choices">
+        <button class="btn" data-datefit="black">black</button>
+        <button class="btn" data-datefit="grey">grey</button>
+        <button class="btn success" data-datefit="black and grey">black and grey</button>
+        <button class="btn" data-datefit="white">white</button>
+      </div>
+      <div id="booDatefit" class="boo">BOOOO 👎</div>
+      <p id="datefitMsg" class="muted"></p>
+      <div class="applause" id="applauseDatefit"><span>🏆</span><span>Special prize unlocked.</span></div>
+    </section>
+
+    <section class="card">
+      <h2>How old are you turning</h2>
+      <div id="ageWrap" style="position:relative;min-height:170px;border-radius:14px;">
+        <button class="btn" data-runaway="1">70</button>
+        <button class="btn" data-runaway="1">grand papacito</button>
+        <button class="btn success" id="correctAge" style="position:absolute;left:10px;top:80px">old enough to be your daddy</button>
+        <button class="btn" data-runaway="1">Genghis khan age</button>
+      </div>
+      <p id="ageMsg" class="muted" style="margin-top:12px"></p>
+      <div class="applause" id="applauseAge"><span>😂</span><span>Correct.</span></div>
+    </section>
+
+    <section class="card">
+      <h2>I learned how to code for you</h2>
+      <div class="choices">
+        <button class="btn success" id="codeYes">I knew my baby was smart-you are hired and Devin is fired!!</button>
+        <button class="btn" id="codeNo">nahhh-I’m sure u used ai 🤨</button>
+      </div>
+      <p id="codeResp" class="muted"></p>
+      <div class="applause" id="applauseCode"><span>💻</span><span>logged.</span></div>
+    </section>
+
     <div style="display:flex;justify-content:flex-end">
-      <button class="btn success" id="toConsent">Next</button>
+      <button class="btn pink big" id="toConsent">Next</button>
     </div>
   </div>
+
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
