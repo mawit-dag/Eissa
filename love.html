@@ -1,12 +1,14 @@
 <!doctype html><html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Us — Happy Birthday, my jaan</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Us</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module" src="./app.js"></script>
 </head>
 <body>
   <div class="bg-wrap"><canvas id="stars"></canvas></div>
+
   <div class="audio-bar">
     <span>Audio</span>
     <button class="btn" id="playAudio" type="button">Play</button>
@@ -17,30 +19,28 @@
   <nav>
     <div class="container">
       <div class="tabs">
-        <a data-nav href="index.html">Start</a>
+        <a data-nav href="start.html">Start</a>
         <a data-nav href="love.html" class="active">Us</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html">Trip Picker</a>
-        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="gallery.html">Love Letter</a>
         <a data-nav href="finale.html">Finale</a>
+        <a data-nav href="credits.html">Credits</a>
       </div>
     </div>
   </nav>
 
   <div class="container page">
-    <section class="card">
-      <h2>Reasons I’m obsessed with us</h2>
-      <p>- You, me, snacks, and the open road. Perfect portfolio. Compounded smiles.<br/>
-         - Your laugh is my favorite notification sound.<br/>
-         - Together ROI: Ridiculous Overload of Inside‑jokes.</p>
-      <div class="gallery" aria-label="Our photos">
-        <img src="photos/photo1.jpg" alt="Memory 1"/>
-        <img src="photos/photo2.jpg" alt="Memory 2"/>
-        <img src="photos/photo3.jpg" alt="Memory 3"/>
-        <img src="photos/photo4.jpg" alt="Memory 4"/>
+    <section class="card hero-glow">
+      <h2>Us 🤍</h2>
+      <p>One little replay of my favorite person.</p>
+
+      <div class="video-frame">
+        <video src="videos/us-video.mp4" controls playsinline></video>
       </div>
-      <div style="margin-top:10px">
+
+      <div style="margin-top:14px">
         <a data-nav href="prompts.html" class="btn success">Continue</a>
       </div>
     </section>
