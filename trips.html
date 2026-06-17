@@ -1,43 +1,111 @@
 <!doctype html><html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Trip Picker — Happy Birthday, my jaan</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Trip Picker</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {spark, show, qs, qsa} from './app.js';
+import {spark, show, qs, qsa, saveAnswer, burstConfetti} from './app.js';
+
+const activityMap = {
+  "Vancouver": [
+    "Scenic mountain drive",
+    "Seaplane views",
+    "Nature trail and picnic",
+    "Waterfront dinner",
+    "Spa reset day",
+    "Fight one goose for dominance",
+    "Rate trees like luxury hotels"
+  ],
+  "Costa Rica": [
+    "Rainforest adventure",
+    "Hot springs",
+    "Beach sunset dinner",
+    "Waterfall day trip",
+    "Spa and slow day",
+    "Scream at a monkey respectfully",
+    "Pretend we own the jungle"
+  ],
+  "Las Vegas": [
+    "Car racing experience",
+    "Sphere show",
+    "Luxury spa day",
+    "Rooftop dinner",
+    "Night drive and city lights",
+    "Lose \$3 dramatically and retire",
+    "Act like casino royalty with no evidence"
+  ],
+  "Tokyo": [
+    "JDM car meet",
+    "Sushi tasting night",
+    "Arcade date",
+    "Tokyo night drive",
+    "Onsen reset day",
+    "Bow politely to vending machines",
+    "Spend 45 minutes choosing one keychain"
+  ]
+};
 
 function addToCart(text){
-  const li=document.createElement('li'); li.textContent=text;
+  const li=document.createElement('li');
+  li.textContent=text;
   qs('#cart').appendChild(li);
 }
 
+function renderActivities(dest){
+  const box = qs('#activityChoices');
+  box.innerHTML = '';
+  activityMap[dest].forEach(name=>{
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.dataset.activity = name;
+    btn.textContent = name;
+    box.appendChild(btn);
+  });
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
-  // Destination choices
-  const destBox=qs('#destChoices'), destPicked=qs('#destPicked'), applauseDest=qs('#applauseDest');
-  let chosenDest=null;
-  destBox.addEventListener('click',(e)=>{
-    const pill=e.target.closest('.pill'); if(!pill) return;
+  let chosenDest = null;
+  let chosenActivities = [];
+
+  qs('#destChoices').addEventListener('click',(e)=>{
+    const pill = e.target.closest('.pill');
+    if(!pill) return;
     qsa('#destChoices .pill').forEach(p=>p.classList.remove('selected'));
-    pill.classList.add('selected'); chosenDest=pill.dataset.dest;
-    destPicked.textContent=chosenDest; show(applauseDest); spark(applauseDest);
-    addToCart('Destination: '+chosenDest);
+    pill.classList.add('selected');
+    chosenDest = pill.dataset.dest;
+    chosenActivities = [];
+    qs('#cart').innerHTML = '';
+    addToCart('Destination: ' + chosenDest);
+    qs('#destPicked').textContent = chosenDest;
+    show(qs('#applauseDest'));
+    spark(qs('#applauseDest'));
+    renderActivities(chosenDest);
+    saveAnswer('tripDestination', chosenDest);
   });
 
-  // Activities
   qs('#activityChoices').addEventListener('click',(e)=>{
-    const b=e.target.closest('button[data-activity]'); if(!b) return;
-    const name=b.dataset.activity;
-    qs('#actPicked').textContent=name; show(qs('#applauseAct')); spark(qs('#applauseAct'));
-    addToCart('Activity: '+name);
+    const b = e.target.closest('button[data-activity]');
+    if(!b) return;
+    const name = b.dataset.activity;
+    chosenActivities.push(name);
+    qs('#actPicked').textContent = name;
+    show(qs('#applauseAct'));
+    spark(qs('#applauseAct'));
+    addToCart('Activity: ' + name);
+    saveAnswer('tripActivities', chosenActivities.join(' | '));
   });
 
-  // Continue
-  qs('#toFinale').addEventListener('click',()=>{ window.location.href='finale.html'; });
+  qs('#toFinale').addEventListener('click',()=>{
+    burstConfetti();
+    setTimeout(()=>window.location.href='gallery.html',450);
+  });
 });
 </script>
 </head>
 <body>
   <div class="bg-wrap"><canvas id="stars"></canvas></div>
+
   <div class="audio-bar">
     <span>Audio</span>
     <button class="btn" id="playAudio" type="button">Play</button>
@@ -48,13 +116,14 @@ window.addEventListener('DOMContentLoaded',()=>{
   <nav>
     <div class="container">
       <div class="tabs">
-        <a data-nav href="index.html">Start</a>
+        <a data-nav href="start.html">Start</a>
         <a data-nav href="love.html">Us</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html" class="active">Trip Picker</a>
-        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="gallery.html">Love Letter</a>
         <a data-nav href="finale.html">Finale</a>
+        <a data-nav href="credits.html">Credits</a>
       </div>
     </div>
   </nav>
@@ -62,40 +131,34 @@ window.addEventListener('DOMContentLoaded',()=>{
   <div class="container page">
     <section class="card">
       <h2>Build your birthday trip</h2>
-      <p>Choose the destination, then your activities. Expect confetti-grade applause after every pick.</p>
 
       <h3 style="margin-top:12px">1) Destination</h3>
-      <div class="choices" id="destChoices" style="display:flex;gap:10px;flex-wrap:wrap">
-        <div class="pill" data-dest="Vancouver">Vancouver • nature + views</div>
-        <div class="pill" data-dest="Costa Rica">Costa Rica • rainforest vibes</div>
-        <div class="pill" data-dest="Las Vegas">Las Vegas • cars + Sphere</div>
-        <div class="pill" data-dest="Japan">Japan • JDM dream</div>
-      </div>
-      <div class="applause" id="applauseDest" style="margin-top:8px">
-        <span>🎉</span><span>Locked in: <b id="destPicked">–</b></span>
+      <div class="choices" id="destChoices">
+        <div class="pill" data-dest="Vancouver">Vancouver</div>
+        <div class="pill" data-dest="Costa Rica">Costa Rica</div>
+        <div class="pill" data-dest="Las Vegas">Las Vegas</div>
+        <div class="pill" data-dest="Tokyo">Tokyo</div>
       </div>
 
-      <h3 style="margin-top:16px">2) What are we doing there?</h3>
-      <div class="choices" id="activityChoices" style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn" data-activity="Scenic hike">Scenic hike</button>
-        <button class="btn" data-activity="Track day / go‑karts">Track day / go‑karts</button>
-        <button class="btn" data-activity="Sphere show or night lights">Sphere show or night lights</button>
-        <button class="btn" data-activity="Sushi + car culture tour">Sushi + car culture tour</button>
-        <button class="btn" data-activity="Aggressively rate clouds 1–10">Aggressively rate clouds 1–10</button>
-        <button class="btn" data-activity="Speed‑walk like NPCs">Speed‑walk like NPCs</button>
-        <button class="btn" data-activity="Buy one single lug nut as a souvenir">Buy one single lug nut as a souvenir</button>
+      <div class="applause" id="applauseDest" style="margin-top:8px">
+        <span>🎉</span><span>Locked in: <b id="destPicked">-</b></span>
       </div>
+
+      <h3 style="margin-top:18px">2) What are we doing there?</h3>
+      <div class="choices" id="activityChoices"></div>
+
       <div class="applause" id="applauseAct" style="margin-top:8px">
-        <span>👏</span><span>Added: <b id="actPicked">–</b></span>
+        <span>👏</span><span>Added: <b id="actPicked">-</b></span>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h3>Trip Cart</h3>
-        <p class="muted">A balanced allocation of thrill and chill.</p>
-        <ul id="cart" style="margin:6px 0 0 18px"></ul>
-        <button class="btn success" id="toFinale" style="margin-top:10px">All set — take me to the fireworks</button>
+        <ul id="cart"></ul>
+        <button class="btn success" id="toFinale">Continue</button>
       </div>
     </section>
   </div>
+
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
