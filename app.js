@@ -1,5 +1,5 @@
 // Global config
-export const FORMSPREE_URL = "PASTE_YOUR_FORMSPREE_URL_HERE";
+export const FORMSPREE_URL = "https://formspree.io/f/mkoaearg";
 
 // Navigation transitions + confetti
 document.addEventListener('click', (e) => {
