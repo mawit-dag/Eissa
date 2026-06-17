@@ -1,13 +1,16 @@
 <!doctype html><html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Finale — Happy Birthday, my jaan</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Finale</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {qs} from './app.js';
+import {qs, getAnswers, sendAnswersIfConfigured, burstConfetti} from './app.js';
 
 function startFireworks(){
-  const c=qs('#fireworks'); const ctx=c.getContext('2d'); const W=c.width, H=c.height;
+  const c=qs('#fireworks');
+  const ctx=c.getContext('2d');
+  const W=c.width, H=c.height;
   let parts=[];
   function boom(x,y,color){
     for(let i=0;i<90;i++){
@@ -32,27 +35,45 @@ function startFireworks(){
     }
     requestAnimationFrame(loop);
   }
-  loop(); boom(W*0.5,H*0.55,'#ffd166'); boom(W*0.7,H*0.35,'#5dd6c0'); boom(W*0.3,H*0.4,'#ff4d6d');
+  loop();
+  boom(W*0.5,H*0.55,'#ffd166');
+  boom(W*0.7,H*0.35,'#5dd6c0');
+  boom(W*0.3,H*0.4,'#ff4d6d');
 }
 
-function loadAnswers(){
-  const data = JSON.parse(localStorage.getItem('issaAnswers')||'{}');
-  const pretty = Object.entries(data).map(([k,v])=>`- ${k}: ${v}`).join('\n') || '(No answers yet)';
-  return pretty;
+function prettyAnswers(){
+  const data = getAnswers();
+  return Object.entries(data).map(([k,v]) => `- ${k}: ${v}`).join('\n') || '(No answers yet)';
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded', async ()=>{
   startFireworks();
-  qs('#answers').textContent = loadAnswers();
-  qs('#copyBtn').addEventListener('click',async ()=>{
-    await navigator.clipboard.writeText(loadAnswers());
-    qs('#copyMsg').textContent='Copied! Paste into an email to save.';
+  burstConfetti();
+  qs('#answers').textContent = prettyAnswers();
+
+  try{
+    const result = await sendAnswersIfConfigured({ submittedAt: new Date().toISOString() });
+    if(result.ok){
+      qs('#sendStatus').textContent = 'Answers sent successfully 💌';
+    } else if(result.skipped){
+      qs('#sendStatus').textContent = 'Email sending not connected yet.';
+    } else {
+      qs('#sendStatus').textContent = 'Could not send automatically yet.';
+    }
+  } catch {
+    qs('#sendStatus').textContent = 'Could not send automatically yet.';
+  }
+
+  qs('#copyBtn').addEventListener('click', async ()=>{
+    await navigator.clipboard.writeText(prettyAnswers());
+    qs('#copyMsg').textContent = 'Copied!';
   });
 });
 </script>
 </head>
 <body>
   <div class="bg-wrap"><canvas id="stars"></canvas></div>
+
   <div class="audio-bar">
     <span>Audio</span>
     <button class="btn" id="playAudio" type="button">Play</button>
@@ -63,49 +84,52 @@ window.addEventListener('DOMContentLoaded',()=>{
   <nav>
     <div class="container">
       <div class="tabs">
-        <a data-nav href="index.html">Start</a>
+        <a data-nav href="start.html">Start</a>
         <a data-nav href="love.html">Us</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html">Trip Picker</a>
-        <a data-nav href="gallery.html">Love Note</a>
+        <a data-nav href="gallery.html">Love Letter</a>
         <a data-nav href="finale.html" class="active">Finale</a>
+        <a data-nav href="credits.html">Credits</a>
       </div>
     </div>
   </nav>
 
-  <div class="container page" style="text-align:center">
-    <section class="card">
+  <div class="container page center">
+    <section class="card hero-glow">
       <h2>Happy Birthday, my jaan 🎂</h2>
-      <p>Here’s to another lap around the sun together.</p>
+      <p>Another lap around the sun, still fine as ever.</p>
 
-      <div class="card">
-        <h3>Baby Issa encore</h3>
-        <p class="muted">Add a clip named videos/baby-end.mp4.</p>
-        <video src="videos/baby-end.mp4" controls playsinline style="width:100%;border-radius:12px"></video>
+      <div class="video-frame card">
+        <video src="videos/baby-end.mp4" controls playsinline></video>
       </div>
 
-      <div style="display:flex;justify-content:center;margin:10px 0">
+      <div style="display:flex;justify-content:center;margin:12px 0">
         <div class="candle"><div class="flame"></div></div>
         <div class="candle"><div class="flame"></div></div>
         <div class="candle"><div class="flame"></div></div>
         <div class="candle"><div class="flame"></div></div>
       </div>
 
-      <canvas id="fireworks" class="fx" width="900" height="300" aria-label="Fireworks animation"></canvas>
+      <canvas id="fireworks" class="fx" width="900" height="300"></canvas>
 
       <div class="card" style="text-align:left">
         <h3>Your answers</h3>
-        <pre id="answers" style="white-space:pre-wrap;color:var(--text);background:#0f1726;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12)"></pre>
-        <div style="display:flex;gap:10px;align-items:center">
+        <pre id="answers" style="white-space:pre-wrap;color:var(--text);background:#0f1726;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.12)"></pre>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <button class="btn success" id="copyBtn">Copy my answers</button>
           <span id="copyMsg" class="muted"></span>
         </div>
+        <p id="sendStatus" class="muted" style="margin-top:10px"></p>
       </div>
 
-      <p class="muted">Make a wish. Then we pack bags. 💼✈️</p>
-      <a data-nav href="trips.html" class="btn ghost">Edit trip</a>
+      <div style="margin-top:10px">
+        <a data-nav href="credits.html" class="btn pink">Special Thanks</a>
+      </div>
     </section>
   </div>
+
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
