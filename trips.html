@@ -5,7 +5,7 @@
 <title>Trip Picker</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {spark, show, qs, qsa, saveAnswer, burstConfetti} from './app.js';
+import {spark, show, qs, qsa, saveAnswer, burstConfetti, flyPlane} from './app.js';
 
 const activityMap = {
   "Vancouver": [
@@ -32,7 +32,7 @@ const activityMap = {
     "Luxury spa day",
     "Rooftop dinner",
     "Night drive and city lights",
-    "Lose \$3 dramatically and retire",
+    "Lose $3 dramatically and retire",
     "Act like casino royalty with no evidence"
   ],
   "Tokyo": [
@@ -44,6 +44,13 @@ const activityMap = {
     "Bow politely to vending machines",
     "Spend 45 minutes choosing one keychain"
   ]
+};
+
+const imageMap = {
+  "Vancouver": "images/vancouver.jpg",
+  "Costa Rica": "images/costarica.jpg",
+  "Las Vegas": "images/vegas.jpg",
+  "Tokyo": "images/tokyo.jpg"
 };
 
 function addToCart(text){
@@ -97,8 +104,16 @@ window.addEventListener('DOMContentLoaded',()=>{
   });
 
   qs('#toFinale').addEventListener('click',()=>{
+    if(!chosenDest) return;
+    const wrap = qs('#destinationPop');
+    const img = qs('#destinationImg');
+    const label = qs('#destinationLabel');
+    img.src = imageMap[chosenDest];
+    label.textContent = chosenDest + ' confirmed 😌';
+    wrap.style.display = 'block';
+    flyPlane();
     burstConfetti();
-    setTimeout(()=>window.location.href='gallery.html',450);
+    setTimeout(()=>window.location.href='gallery.html',1800);
   });
 });
 </script>
@@ -117,7 +132,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     <div class="container">
       <div class="tabs">
         <a data-nav href="start.html">Start</a>
-        <a data-nav href="love.html">Us</a>
+        <a data-nav href="love.html">u + me</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html" class="active">Trip Picker</a>
@@ -155,6 +170,13 @@ window.addEventListener('DOMContentLoaded',()=>{
         <h3>Trip Cart</h3>
         <ul id="cart"></ul>
         <button class="btn success" id="toFinale">Continue</button>
+      </div>
+
+      <div id="destinationPop" class="destination-pop photo-frame">
+        <img id="destinationImg" src="" alt="destination confirmation">
+        <div style="padding:12px 14px">
+          <strong id="destinationLabel"></strong>
+        </div>
       </div>
     </section>
   </div>
