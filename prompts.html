@@ -8,64 +8,7 @@
 import {spark, show, qs, saveAnswer, burstConfetti} from './app.js';
 
 window.addEventListener('DOMContentLoaded',()=>{
-  // Does my baby feel special?
-  const feelYes=qs('#feelYes');
-  const feelNo=qs('#feelNo');
-  feelYes.addEventListener('click',()=>{
-    qs('#feelMsg').textContent="As you should 😌";
-    show(qs('#applauseFeel')); spark(qs('#applauseFeel'));
-    saveAnswer('doesMyBabyFeelSpecial', 'Yes');
-  });
-  feelNo.addEventListener('click',()=>{
-    feelNo.textContent='Yes';
-    feelNo.classList.add('success');
-    qs('#feelMsg').textContent="Correct answer restored.";
-    show(qs('#applauseFeel')); spark(qs('#applauseFeel'));
-    saveAnswer('doesMyBabyFeelSpecial', 'Yes (button corrected)');
-  });
-
-  // How much do you love Dagma?
-  document.querySelectorAll('[data-love]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const choice=btn.getAttribute('data-love');
-      if(choice === 'This is not about you, Dagmaaaa'){
-        qs('#loveMsg').textContent = 'who else is it about then ?🤨';
-      } else {
-        qs('#loveMsg').textContent = 'wowww only that?😩';
-      }
-      show(qs('#applauseLove')); spark(qs('#applauseLove'));
-      saveAnswer('howMuchDoYouLoveDagma', choice);
-    });
-  });
-
-  // Cake flavor
-  qs('#cakeForm').addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const val = qs('#cakeText').value.trim();
-    if(!val) return;
-    saveAnswer('favoriteCakeFlavor', val);
-    qs('#cakeSaved').textContent='Saved 🍰';
-    show(qs('#applauseCake')); spark(qs('#applauseCake'));
-  });
-
-  // First date outfit
-  document.querySelectorAll('[data-datefit]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const ans = btn.dataset.datefit;
-      saveAnswer('firstDateOutfitGuess', ans);
-      if(ans === 'black and grey'){
-        qs('#datefitMsg').textContent = 'Yessss you got it 😌';
-        show(qs('#applauseDatefit')); spark(qs('#applauseDatefit'));
-      } else {
-        const boo = qs('#booDatefit');
-        boo.style.display = 'block';
-        qs('#datefitMsg').textContent = 'Incorrect 😭';
-        setTimeout(()=>boo.style.display='none', 1200);
-      }
-    });
-  });
-
-  // Age question runaway buttons except correct one
+  // age
   const ageWrap = qs('#ageWrap');
   document.querySelectorAll('[data-runaway]').forEach(btn=>{
     btn.addEventListener('mouseover',()=>{
@@ -83,7 +26,85 @@ window.addEventListener('DOMContentLoaded',()=>{
     saveAnswer('howOldAreYouTurning', 'old enough to be your daddy');
   });
 
-  // I learned how to code for you - comes last
+  // cake flavor
+  document.querySelectorAll('[data-cake]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      saveAnswer('favoriteCakeFlavor', btn.dataset.cake);
+      qs('#yummyCake').style.display = 'block';
+      qs('#cakeMsg').textContent = 'Elite choice honestly.';
+    });
+  });
+
+  // favorite color on you
+  qs('#colorYouForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const val = qs('#colorYouText').value.trim();
+    if(!val) return;
+    saveAnswer('favoriteColorOnYou', val);
+    qs('#colorYouSaved').textContent='Saved 😌';
+    show(qs('#applauseColorYou')); spark(qs('#applauseColorYou'));
+  });
+
+  // perfect birthday
+  qs('#birthdayForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const val = qs('#birthdayText').value.trim();
+    if(!val) return;
+    saveAnswer('perfectBirthdayDescription', val);
+    qs('#birthdaySaved').textContent='Saved 🎂';
+    show(qs('#applauseBirthday')); spark(qs('#applauseBirthday'));
+  });
+
+  // unforgettable trip
+  qs('#tripFeelForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const val = qs('#tripFeelText').value.trim();
+    if(!val) return;
+    saveAnswer('whatMakesTripUnforgettable', val);
+    qs('#tripFeelSaved').textContent='Saved ✈️';
+    show(qs('#applauseTripFeel')); spark(qs('#applauseTripFeel'));
+  });
+
+  // vibe
+  document.querySelectorAll('[data-vibe]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      saveAnswer('birthdayVibe', btn.dataset.vibe);
+      qs('#bigYay').style.display = 'block';
+    });
+  });
+
+  // love question
+  document.querySelectorAll('[data-love]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const choice=btn.getAttribute('data-love');
+      if(choice === 'This is not about you, Dagmaaaa'){
+        qs('#loveMsg').textContent = 'who else is it about then ?🤨';
+      } else {
+        qs('#loveMsg').textContent = 'wowww only that?😩';
+      }
+      show(qs('#applauseLove')); spark(qs('#applauseLove'));
+      saveAnswer('howMuchDoYouLoveDagma', choice);
+    });
+  });
+
+  // first date outfit
+  document.querySelectorAll('[data-datefit]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ans = btn.dataset.datefit;
+      saveAnswer('firstDateOutfitGuess', ans);
+      if(ans === 'black and grey'){
+        qs('#datefitMsg').textContent = 'Yessss you got it 😌';
+        show(qs('#applauseDatefit')); spark(qs('#applauseDatefit'));
+      } else {
+        const boo = qs('#booDatefit');
+        boo.style.display = 'block';
+        qs('#datefitMsg').textContent = 'Incorrect 😭';
+        setTimeout(()=>boo.style.display='none', 1400);
+      }
+    });
+  });
+
+  // code for you
   qs('#codeYes').addEventListener('click',()=>{
     qs('#codeResp').textContent="Devin is fired 😌";
     show(qs('#applauseCode')); spark(qs('#applauseCode'));
@@ -95,9 +116,23 @@ window.addEventListener('DOMContentLoaded',()=>{
     saveAnswer('learnedHowToCode', 'nahhh-I’m sure u used ai 🤨');
   });
 
+  // special
+  const feelYes=qs('#feelYes');
+  const feelNo=qs('#feelNo');
+  feelYes.addEventListener('click',()=>{
+    qs('#specialPerson').style.display = 'block';
+    saveAnswer('doesMyBabyFeelSpecial', 'Yes');
+  });
+  feelNo.addEventListener('click',()=>{
+    feelNo.textContent='Yes';
+    feelNo.classList.add('success');
+    qs('#specialPerson').style.display = 'block';
+    saveAnswer('doesMyBabyFeelSpecial', 'Yes (button corrected)');
+  });
+
   qs('#toConsent').addEventListener('click',()=>{
     burstConfetti();
-    setTimeout(()=>window.location.href='consent.html', 450);
+    setTimeout(()=>window.location.href='consent.html', 700);
   });
 });
 </script>
@@ -116,7 +151,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     <div class="container">
       <div class="tabs">
         <a data-nav href="start.html">Start</a>
-        <a data-nav href="love.html">Us</a>
+        <a data-nav href="love.html">u + me</a>
         <a data-nav href="prompts.html" class="active">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html">Trip Picker</a>
@@ -129,13 +164,73 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   <div class="container page">
     <section class="card">
-      <h2>Does my baby feel special ?</h2>
-      <div class="choices">
-        <button class="btn success" id="feelYes">Yes</button>
-        <button class="btn" id="feelNo">No</button>
+      <h2>How old are u turning</h2>
+      <p class="muted">Please answer carefully, ancient one.</p>
+      <div id="ageWrap" style="position:relative;min-height:170px;border-radius:14px;">
+        <button class="btn" data-runaway="1">70</button>
+        <button class="btn" data-runaway="1">grand papacito</button>
+        <button class="btn success" id="correctAge" style="position:absolute;left:10px;top:80px">old enough to be your daddy</button>
+        <button class="btn" data-runaway="1">Genghis khan age</button>
       </div>
-      <p id="feelMsg" class="muted"></p>
-      <div class="applause" id="applauseFeel"><span>✨</span><span>Special mode confirmed.</span></div>
+      <p id="ageMsg" class="muted" style="margin-top:12px"></p>
+      <div class="applause" id="applauseAge"><span>😂</span><span>Correct.</span></div>
+    </section>
+
+    <section class="card">
+      <h2>What is your favorite cake flavour</h2>
+      <div class="choices">
+        <button class="btn" data-cake="chocolate">chocolate</button>
+        <button class="btn" data-cake="red velvet">red velvet</button>
+        <button class="btn" data-cake="vanilla">vanilla</button>
+        <button class="btn" data-cake="strawberry">strawberry</button>
+      </div>
+      <div id="yummyCake" class="yummy">SO YUMMYYYYY 🍰</div>
+      <p id="cakeMsg" class="muted"></p>
+    </section>
+
+    <section class="card">
+      <h2>What is your favorite colour on you</h2>
+      <form id="colorYouForm">
+        <textarea id="colorYouText" placeholder="Type here..."></textarea>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn success" type="submit">Save answer</button>
+          <div class="applause" id="applauseColorYou"><span>🎨</span><span id="colorYouSaved">Saved</span></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Describe your perfect birthday in as much detail as possible</h2>
+      <p class="muted">I’m taking notes very seriously... maybe 😌</p>
+      <form id="birthdayForm">
+        <textarea id="birthdayText" placeholder="Type here..."></textarea>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn success" type="submit">Save answer</button>
+          <div class="applause" id="applauseBirthday"><span>🎂</span><span id="birthdaySaved">Saved</span></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>What makes a trip unforgettable for you</h2>
+      <form id="tripFeelForm">
+        <textarea id="tripFeelText" placeholder="Type here..."></textarea>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn success" type="submit">Save answer</button>
+          <div class="applause" id="applauseTripFeel"><span>✈️</span><span id="tripFeelSaved">Saved</span></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>What vibe do you want to feel on your birthday</h2>
+      <div class="choices">
+        <button class="btn" data-vibe="relaxed">relaxed</button>
+        <button class="btn" data-vibe="spoiled">spoiled</button>
+        <button class="btn" data-vibe="adventurous">adventurous</button>
+        <button class="btn" data-vibe="excited">excited</button>
+      </div>
+      <div id="bigYay" class="yay">YAYYYYYYY 🎉</div>
     </section>
 
     <section class="card">
@@ -148,18 +243,6 @@ window.addEventListener('DOMContentLoaded',()=>{
       </div>
       <p id="loveMsg" class="muted"></p>
       <div class="applause" id="applauseLove"><span>💖</span><span>noted.</span></div>
-    </section>
-
-    <section class="card">
-      <h2>What is your favorite flavour cake</h2>
-      <p class="muted">Type your answer.</p>
-      <form id="cakeForm">
-        <textarea id="cakeText" placeholder="Type here..."></textarea>
-        <div style="margin-top:8px;display:flex;gap:10px;align-items:center">
-          <button class="btn success" type="submit">Save answer</button>
-          <div class="applause" id="applauseCake"><span>🍰</span><span id="cakeSaved">Saved</span></div>
-        </div>
-      </form>
     </section>
 
     <section class="card">
@@ -177,19 +260,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     </section>
 
     <section class="card">
-      <h2>How old are you turning</h2>
-      <div id="ageWrap" style="position:relative;min-height:170px;border-radius:14px;">
-        <button class="btn" data-runaway="1">70</button>
-        <button class="btn" data-runaway="1">grand papacito</button>
-        <button class="btn success" id="correctAge" style="position:absolute;left:10px;top:80px">old enough to be your daddy</button>
-        <button class="btn" data-runaway="1">Genghis khan age</button>
-      </div>
-      <p id="ageMsg" class="muted" style="margin-top:12px"></p>
-      <div class="applause" id="applauseAge"><span>😂</span><span>Correct.</span></div>
-    </section>
-
-    <section class="card">
-      <h2>I learned how to code for you</h2>
+      <h2>Did I learn how to code for you</h2>
       <div class="choices">
         <button class="btn success" id="codeYes">I knew my baby was smart-you are hired and Devin is fired!!</button>
         <button class="btn" id="codeNo">nahhh-I’m sure u used ai 🤨</button>
@@ -198,7 +269,16 @@ window.addEventListener('DOMContentLoaded',()=>{
       <div class="applause" id="applauseCode"><span>💻</span><span>logged.</span></div>
     </section>
 
-    <div style="display:flex;justify-content:flex-end">
+    <section class="card">
+      <h2>Does my baby feel special ?</h2>
+      <div class="choices">
+        <button class="btn success" id="feelYes">Yes</button>
+        <button class="btn" id="feelNo">No</button>
+      </div>
+      <div id="specialPerson" class="big-response">The most special person in my life</div>
+    </section>
+
+    <div class="mobile-safe-actions">
       <button class="btn pink big" id="toConsent">Next</button>
     </div>
   </div>
