@@ -18,9 +18,9 @@ window.addEventListener('DOMContentLoaded',()=>{
       status.textContent = 'Unlocking... ' + '•'.repeat(code.length);
       if(code.length === 3){
         if(JSON.stringify(code) === JSON.stringify(correct)){
-          status.textContent = 'Access granted, handsome 😌';
+          status.textContent = 'Access granted, Mr. Khan 😌';
           burstConfetti();
-          setTimeout(()=>window.location.href='start.html',700);
+          setTimeout(()=>window.location.href='start.html',900);
         } else {
           status.textContent = 'Wrong code. Cute try though.';
           code.length = 0;
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     <section class="card hero-glow center">
       <span class="badge">Restricted Birthday Access</span>
       <h1 style="margin-top:14px">Enter the birthday portal</h1>
-      <p>Only one very handsome fintech king is allowed through.</p>
+      <p>Let’s see the IQ Mr. Khan.</p>
 
       <div class="unlock-grid">
         <button class="unlock-pad" data-num="1">1</button>
