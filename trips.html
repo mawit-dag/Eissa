@@ -43,6 +43,15 @@ const activityMap = {
     "Onsen reset day",
     "Bow politely to vending machines",
     "Spend 45 minutes choosing one keychain"
+  ],
+  "Banff": [
+    "Lake Louise views",
+    "Gondola ride",
+    "Hot springs soak",
+    "Scenic mountain drive",
+    "Cozy cabin dinner",
+    "Fight one elk for dominance",
+    "Pretend we’re in a luxury nature documentary"
   ]
 };
 
@@ -50,7 +59,8 @@ const imageMap = {
   "Vancouver": "images/vancouver.jpg",
   "Costa Rica": "images/costarica.jpg",
   "Las Vegas": "images/vegas.jpg",
-  "Tokyo": "images/tokyo.jpg"
+  "Tokyo": "images/tokyo.jpg",
+  "Banff": "images/banff.jpg"
 };
 
 function addToCart(text){
@@ -85,6 +95,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     qs('#cart').innerHTML = '';
     addToCart('Destination: ' + chosenDest);
     qs('#destPicked').textContent = chosenDest;
+    qs('#faveOption').textContent = chosenDest === 'Banff' ? 'My fave option 🥰' : '';
     show(qs('#applauseDest'));
     spark(qs('#applauseDest'));
     renderActivities(chosenDest);
@@ -153,11 +164,16 @@ window.addEventListener('DOMContentLoaded',()=>{
         <div class="pill" data-dest="Costa Rica">Costa Rica</div>
         <div class="pill" data-dest="Las Vegas">Las Vegas</div>
         <div class="pill" data-dest="Tokyo">Tokyo</div>
+        <div class="pill" data-dest="Banff">Banff</div>
       </div>
+
+      <p class="muted" style="margin-top:10px">I have 5 days including travel time so choose wisely 🥰</p>
 
       <div class="applause" id="applauseDest" style="margin-top:8px">
         <span>🎉</span><span>Locked in: <b id="destPicked">-</b></span>
       </div>
+
+      <p id="faveOption" class="muted" style="margin-top:8px;color:#ffd166;font-weight:700;"></p>
 
       <h3 style="margin-top:18px">2) What are we doing there?</h3>
       <div class="choices" id="activityChoices"></div>
