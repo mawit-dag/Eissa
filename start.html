@@ -5,20 +5,23 @@
 <title>Happy Birthday, my jaan</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {spark, qs, burstConfetti} from './app.js';
+import {spark, qs, burstConfetti, burstFireworks} from './app.js';
 
 window.addEventListener('DOMContentLoaded',()=>{
   const t=qs('#celeIndex');
-  let i=0, seq=[0.42,1.37,2.85,4.20,6.90,10.00,12.34];
+  let i=0, seq=[1.11,2.07,4.44,7.04,10.00,14.30];
   const tick=()=>{ if(i<seq.length){ t.textContent=`+${seq[i++].toFixed(2)}%`; setTimeout(tick, 500);} };
   setTimeout(tick,700);
 
+  burstConfetti();
+  burstFireworks(qs('#welcomeHero'));
+
   const yes=qs('#yesIntro'), no=qs('#noIntro'), msg=qs('#noMsg');
   yes.addEventListener('click',()=>{
-    msg.textContent='Good choice 😌';
+    msg.textContent='Correct choice 😌';
     spark(msg);
     burstConfetti();
-    setTimeout(()=>window.location.href='love.html',500);
+    setTimeout(()=>window.location.href='love.html',650);
   });
   no.addEventListener('mouseenter',()=>{
     yes.style.transform='scale(1.25)';
@@ -46,7 +49,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     <div class="container">
       <div class="tabs">
         <a data-nav href="start.html" class="active">Start</a>
-        <a data-nav href="love.html">Us</a>
+        <a data-nav href="love.html">u + me</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
         <a data-nav href="trips.html">Trip Picker</a>
@@ -58,15 +61,15 @@ window.addEventListener('DOMContentLoaded',()=>{
   </nav>
 
   <div class="container page">
-    <header class="card hero-glow">
-      <div class="fintech-card" aria-live="polite">
+    <header class="card hero-glow" id="welcomeHero">
+      <div class="cyber-card" aria-live="polite">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
           <div>
-            <div class="muted">Issa x Dagma • Celebration Index</div>
+            <div class="muted">Issa x Dagma • Birthday Access Level</div>
             <div style="font-size:28px;margin-top:6px"><span class="ticker" id="celeIndex">+0.00%</span></div>
           </div>
           <div class="muted" style="text-align:right">
-            Portfolio: Love, Laughter, Travel<br/>Risk Level: Dangerously Cute
+            Status: fully adored<br/>Security Level: birthday boy
           </div>
         </div>
       </div>
