@@ -1,7 +1,6 @@
-// Global config
-export const FORMSPREE_URL = "https://formspree.io/f/mkoaearg";
+export const FORMSPREE_URL = "PASTE_YOUR_FORMSPREE_URL_HERE";
 
-// Navigation transitions + confetti
+// nav transitions
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[data-nav]');
   if (!a) return;
@@ -17,11 +16,11 @@ function animateOut(done){
   if(!page){ done(); return; }
   page.animate(
     [{opacity:1, transform:'none'},{opacity:0, transform:'translateY(8px) scale(.985)'}],
-    {duration:340, easing:'ease'}
+    {duration:380, easing:'ease'}
   ).finished.then(done);
 }
 
-// Utils
+// utils
 export function spark(el){
   const s=document.createElement('span');
   s.textContent='✨';
@@ -60,7 +59,7 @@ export async function sendAnswersIfConfigured(extra = {}){
   return { ok: res.ok, skipped:false };
 }
 
-// Background stars
+// stars
 (function starfield(){
   const c = document.getElementById('stars');
   if(!c) return;
@@ -70,7 +69,10 @@ export async function sendAnswersIfConfigured(extra = {}){
     w = c.width = window.innerWidth * devicePixelRatio;
     h = c.height = window.innerHeight * devicePixelRatio;
     stars = Array.from({length: 220}, ()=>({
-      x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.7+0.25, s:Math.random()*0.6+0.12
+      x:Math.random()*w,
+      y:Math.random()*h,
+      r:Math.random()*1.7+0.25,
+      s:Math.random()*0.55+0.1
     }));
   }
   function loop(){
@@ -90,34 +92,76 @@ export async function sendAnswersIfConfigured(extra = {}){
   window.addEventListener('resize', resize);
 })();
 
-// Audio controls
+// audio
 (function audioCtl(){
   const audio = document.getElementById('bg-audio');
   const playBtn = document.getElementById('playAudio');
   const pauseBtn = document.getElementById('pauseAudio');
   if(!audio || !playBtn || !pauseBtn) return;
-  playBtn.addEventListener('click',()=>audio.play());
-  pauseBtn.addEventListener('click',()=>audio.pause());
+
+  audio.volume = 0.9;
+  audio.preload = 'auto';
+
+  playBtn.addEventListener('click', async ()=>{
+    try{
+      await audio.play();
+      playBtn.textContent = 'Playing';
+      setTimeout(()=>playBtn.textContent='Play', 1400);
+    }catch{
+      playBtn.textContent = 'Tap again';
+      setTimeout(()=>playBtn.textContent='Play', 1400);
+    }
+  });
+
+  pauseBtn.addEventListener('click',()=>{
+    audio.pause();
+  });
 })();
 
-// Confetti
+// slower confetti
 export function burstConfetti(){
-  const count = 18;
+  const count = 22;
   for(let i=0;i<count;i++){
     const d = document.createElement('div');
     d.textContent = ['🎉','✨','🎊','💖'][Math.floor(Math.random()*4)];
     d.style.position = 'fixed';
     d.style.left = (Math.random()*100)+'vw';
-    d.style.top = '-20px';
+    d.style.top = '-30px';
     d.style.fontSize = (18 + Math.random()*18)+'px';
     d.style.zIndex = 9999;
     d.style.pointerEvents = 'none';
-    d.style.transition = 'transform 900ms ease, opacity 900ms ease';
+    d.style.transition = 'transform 1800ms ease, opacity 1800ms ease';
     document.body.appendChild(d);
     requestAnimationFrame(()=>{
-      d.style.transform = `translateY(${window.innerHeight * (0.55 + Math.random()*0.35)}px) rotate(${Math.random()*240-120}deg)`;
+      d.style.transform = `translateY(${window.innerHeight * (0.68 + Math.random()*0.24)}px) rotate(${Math.random()*260-130}deg)`;
       d.style.opacity = '0';
     });
-    setTimeout(()=>d.remove(), 950);
+    setTimeout(()=>d.remove(), 1850);
   }
+}
+
+// plane animation
+export function flyPlane(){
+  const plane = document.createElement('div');
+  plane.className = 'fly-plane';
+  plane.textContent = '✈️';
+  document.body.appendChild(plane);
+  setTimeout(()=>plane.remove(), 3700);
+}
+
+// mini fireworks burst
+export function burstFireworks(target){
+  if(!target) return;
+  const burst = document.createElement('div');
+  burst.style.position = 'absolute';
+  burst.style.inset = '0';
+  burst.style.display = 'grid';
+  burst.style.placeItems = 'center';
+  burst.style.pointerEvents = 'none';
+  burst.style.fontSize = '56px';
+  burst.style.zIndex = '4';
+  burst.style.animation = 'fadeUp .6s ease';
+  burst.textContent = '🎆';
+  target.appendChild(burst);
+  setTimeout(()=>burst.remove(), 700);
 }
