@@ -48,13 +48,13 @@ strong{color:var(--text)}
   font-weight:700;
   cursor:pointer;
   transition:.15s ease;
-  box-shadow:none;
 }
 .btn:hover{border-color:rgba(255,255,255,0.22);transform:translateY(-1px)}
 .btn.success{background:linear-gradient(135deg,#1f9d7a,#2bd4b8);color:#001b18}
 .btn.pink{background:linear-gradient(135deg,#ff4d6d,#ff8fab);color:#fff}
 .btn.ghost{background:transparent}
 .btn.big{padding:16px 22px;font-size:18px}
+
 .choices{display:flex;gap:10px;flex-wrap:wrap}
 .pill{
   border:1px solid rgba(255,255,255,0.12);
@@ -67,6 +67,7 @@ strong{color:var(--text)}
   background:linear-gradient(135deg,#23304f,#1a2440);
   border-color:rgba(255,255,255,0.25)
 }
+
 .input, textarea{
   width:100%;
   padding:12px;
@@ -129,18 +130,20 @@ nav .tabs a.active{
 
 .audio-bar{
   position:fixed;
-  right:12px;
+  left:12px;
   bottom:12px;
   z-index:70;
   display:flex;
   gap:8px;
   align-items:center;
-  background:rgba(16,26,42,0.7);
+  background:rgba(16,26,42,0.78);
   border:1px solid rgba(255,255,255,0.12);
   padding:8px 12px;
   border-radius:14px;
   backdrop-filter:blur(10px);
+  max-width:calc(100vw - 24px);
 }
+.audio-bar button{font-size:14px}
 
 .hero-glow{
   position:relative;
@@ -163,22 +166,22 @@ nav .tabs a.active{
   100%{transform:translate(0,0) rotate(0deg)}
 }
 
-.fintech-card{
-  background:linear-gradient(160deg,#0f1a2f 0%,#0c1324 60%);
+.cyber-card{
+  background:linear-gradient(160deg,#0b1220 0%,#0c1324 60%);
   border:1px solid rgba(93,214,192,0.35);
   border-radius:18px;
   padding:16px;
   position:relative;
   overflow:hidden;
 }
-.fintech-card:before{
+.cyber-card:before{
   content:"";
   position:absolute;
   inset:-40px;
-  transform:rotate(12deg);
+  transform:rotate(10deg);
   background:
     radial-gradient(400px 200px at 20% 30%,rgba(93,214,192,0.18),transparent 60%),
-    radial-gradient(300px 160px at 80% 70%,rgba(255,209,102,0.15),transparent 60%);
+    radial-gradient(300px 160px at 80% 70%,rgba(139,92,246,0.18),transparent 60%);
 }
 .ticker{font-variant-numeric:tabular-nums;color:#9fe7d7;font-weight:700}
 
@@ -248,7 +251,7 @@ canvas.fx{
   aspect-ratio:1;
   border:none;
   border-radius:18px;
-  background:linear-gradient(135deg,#1a2440,#273657);
+  background:linear-gradient(135deg,#121e38,#24385d);
   color:var(--text);
   font-size:22px;
   font-weight:800;
@@ -307,3 +310,86 @@ canvas.fx{
 }
 
 .hide{display:none !important;}
+
+.fly-plane{
+  position:fixed;
+  left:-120px;
+  top:22%;
+  font-size:42px;
+  z-index:9998;
+  pointer-events:none;
+  animation:planeFly 3.6s ease-in-out forwards;
+}
+@keyframes planeFly{
+  0%{transform:translateX(0) translateY(0) rotate(8deg);opacity:0}
+  10%{opacity:1}
+  50%{transform:translateX(55vw) translateY(-24px) rotate(3deg);opacity:1}
+  100%{transform:translateX(120vw) translateY(-8px) rotate(-2deg);opacity:0}
+}
+
+.destination-pop{
+  display:none;
+  margin-top:14px;
+  animation:fadeUp .45s ease;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:none}
+}
+
+.big-response{
+  display:none;
+  margin-top:12px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,77,109,.18), rgba(139,92,246,.18));
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+  font-weight:800;
+  font-size:24px;
+  text-align:center;
+  animation:fadeUp .35s ease;
+}
+
+.yummy{
+  display:none;
+  margin-top:12px;
+  font-size:42px;
+  font-weight:900;
+  color:var(--gold);
+  text-align:center;
+  animation:booPop .45s ease;
+}
+
+.yay{
+  display:none;
+  margin-top:12px;
+  font-size:42px;
+  font-weight:900;
+  color:#9fe7d7;
+  text-align:center;
+  animation:booPop .45s ease;
+}
+
+.mobile-safe-actions{
+  display:flex;
+  justify-content:flex-start;
+  margin-top:18px;
+  padding-bottom:90px;
+}
+
+@media(max-width:640px){
+  .container{padding:16px}
+  .audio-bar{
+    left:10px;
+    bottom:10px;
+    padding:8px 10px;
+    gap:6px;
+  }
+  .audio-bar span{
+    display:none;
+  }
+  .mobile-safe-actions{
+    padding-bottom:110px;
+  }
+}
