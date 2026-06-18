@@ -1,4 +1,4 @@
-export const FORMSPREE_URL = "PASTE_YOUR_FORMSPREE_URL_HERE";
+export const FORMSPREE_URL = "https://formspree.io/f/mkoaearg";
 
 // nav transitions
 document.addEventListener('click', (e) => {
