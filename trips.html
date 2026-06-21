@@ -4,6 +4,62 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Destination Unlocked</title>
 <link rel="stylesheet" href="styles.css"/>
+<style>
+  .mission-board{
+    margin-top:18px;
+    padding:16px;
+    border-radius:18px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
+    border:1px solid rgba(255,255,255,0.12);
+    text-align:left;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  }
+  .mission-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    flex-wrap:wrap;
+  }
+  .mission-row:last-child{border-bottom:none}
+  .mission-label{color:#9fb0c3;font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase}
+  .mission-value{color:#fff;font-weight:800}
+  .claim-stamp{
+    display:none;
+    margin-top:12px;
+    font-size:34px;
+    font-weight:900;
+    color:#34d399;
+    letter-spacing:.08em;
+    transform:rotate(-6deg);
+    animation:stampIn .35s ease;
+  }
+  @keyframes stampIn{
+    from{opacity:0;transform:scale(1.5) rotate(-12deg)}
+    to{opacity:1;transform:scale(1) rotate(-6deg)}
+  }
+  .destination-pop img{
+    box-shadow:0 0 30px rgba(255,77,109,.18);
+  }
+  .vegas-glow{
+    animation:vegasPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes vegasPulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.015)}
+  }
+  .fly-plane{
+    font-size:92px !important;
+    top:18% !important;
+  }
+  @media(max-width:640px){
+    .fly-plane{
+      font-size:72px !important;
+      top:16% !important;
+    }
+  }
+</style>
 <script type="module">
 import {spark, show, qs, saveAnswer, burstConfetti, flyPlane, burstFireworks} from './app.js';
 
@@ -22,7 +78,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   burstConfetti();
   setTimeout(()=>burstFireworks(reveal), 250);
-  setTimeout(()=>flyPlane(), 500);
+  setTimeout(()=>flyPlane(), 450);
   setTimeout(()=>{
     pop.style.display = 'block';
   }, 650);
@@ -58,16 +114,21 @@ window.addEventListener('DOMContentLoaded',()=>{
     saveAnswer('tripDestination', 'Las Vegas');
     saveAnswer('tripVegasPick', selected.join(' | '));
 
+    const stamp = qs('#claimStamp');
+    stamp.style.display = 'block';
+    stamp.textContent = 'CLAIMED';
+    setTimeout(()=>{ stamp.style.display = 'none'; }, 1200);
+
     if(name === "Everything. I’m the birthday boy."){
       qs('#extraMsg').textContent = 'As you should honestly 😂';
     } else if(name === "Car racing"){
-      qs('#extraMsg').textContent = 'Vroom vroom, noted 😌';
+      qs('#extraMsg').textContent = 'Vroom vroom. Very serious business.';
     } else if(name === "Sphere"){
-      qs('#extraMsg').textContent = 'Very futuristic of you.';
+      qs('#extraMsg').textContent = 'Excellent. Futuristic king behavior.';
     } else if(name === "Spa"){
-      qs('#extraMsg').textContent = 'Luxury king behavior.';
+      qs('#extraMsg').textContent = 'Luxury, peace, and no emails.';
     } else if(name === "Food + city lights"){
-      qs('#extraMsg').textContent = 'Elite taste, obviously.';
+      qs('#extraMsg').textContent = 'Elite choice. Very date-night CEO.';
     }
   });
 
@@ -111,7 +172,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         Destination Unlocked
       </h2>
 
-      <div class="big-response" style="display:block;margin-top:14px;font-size:clamp(28px,5vw,48px);">
+      <div class="big-response vegas-glow" style="display:block;margin-top:14px;font-size:clamp(28px,5vw,48px);">
         You’re going to Las Vegas 😌
       </div>
 
@@ -120,13 +181,29 @@ window.addEventListener('DOMContentLoaded',()=>{
         Now tell me what you’re claiming first.
       </p>
 
-      <p class="muted" style="margin-top:10px">I have 5 days including travel time so choose wisely 🥰</p>
+      <div class="mission-board">
+        <div class="mission-row">
+          <div class="mission-label">Status</div>
+          <div class="mission-value">Destination Unlocked</div>
+        </div>
+        <div class="mission-row">
+          <div class="mission-label">City</div>
+          <div class="mission-value">Las Vegas</div>
+        </div>
+        <div class="mission-row">
+          <div class="mission-label">Passengers</div>
+          <div class="mission-value">Issa + Dagma</div>
+        </div>
+        <div class="mission-row">
+          <div class="mission-label">Mission Type</div>
+          <div class="mission-value">Birthday Boy Luxury Operations</div>
+        </div>
+      </div>
 
       <div id="destinationPop" class="destination-pop photo-frame" style="max-width:560px;margin:18px auto 0;">
         <img id="destinationImg" src="images/vegas.jpg" alt="Las Vegas">
         <div style="padding:12px 14px">
-          <strong>Las Vegas confirmed 😌</strong><br/>
-          <span class="muted">My fave option.</span>
+          <strong>Las Vegas confirmed 😌</strong>
         </div>
       </div>
     </section>
@@ -138,6 +215,8 @@ window.addEventListener('DOMContentLoaded',()=>{
       <div class="applause" id="applauseAct" style="margin-top:12px">
         <span>🎉</span><span>Added to cart: <b id="actPicked">-</b></span>
       </div>
+
+      <div id="claimStamp" class="claim-stamp">CLAIMED</div>
 
       <p id="extraMsg" class="muted" style="margin-top:10px"></p>
 
