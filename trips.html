@@ -2,127 +2,76 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Trip Picker</title>
+<title>Destination Unlocked</title>
 <link rel="stylesheet" href="styles.css"/>
 <script type="module">
-import {spark, show, qs, qsa, saveAnswer, burstConfetti, flyPlane} from './app.js';
+import {spark, show, qs, saveAnswer, burstConfetti, flyPlane, burstFireworks} from './app.js';
 
-const activityMap = {
-  "Vancouver": [
-    "Scenic mountain drive",
-    "Seaplane views",
-    "Nature trail and picnic",
-    "Waterfront dinner",
-    "Spa reset day",
-    "Fight one goose for dominance",
-    "Rate trees like luxury hotels"
-  ],
-  "Costa Rica": [
-    "Rainforest adventure",
-    "Hot springs",
-    "Beach sunset dinner",
-    "Waterfall day trip",
-    "Spa and slow day",
-    "Scream at a monkey respectfully",
-    "Pretend we own the jungle"
-  ],
-  "Las Vegas": [
-    "Car racing experience",
-    "Sphere show",
-    "Luxury spa day",
-    "Rooftop dinner",
-    "Night drive and city lights",
-    "Lose $3 dramatically and retire",
-    "Act like casino royalty with no evidence"
-  ],
-  "Tokyo": [
-    "JDM car meet",
-    "Sushi tasting night",
-    "Arcade date",
-    "Tokyo night drive",
-    "Onsen reset day",
-    "Bow politely to vending machines",
-    "Spend 45 minutes choosing one keychain"
-  ],
-  "Banff": [
-    "Lake Louise views",
-    "Gondola ride",
-    "Hot springs soak",
-    "Scenic mountain drive",
-    "Cozy cabin dinner",
-    "Fight one elk for dominance",
-    "Pretend we’re in a luxury nature documentary"
-  ]
-};
+const vegasOptions = [
+  "Car racing",
+  "Sphere",
+  "Spa",
+  "Food + city lights",
+  "Everything. I’m the birthday boy."
+];
 
-const imageMap = {
-  "Vancouver": "images/vancouver.jpg",
-  "Costa Rica": "images/costarica.jpg",
-  "Las Vegas": "images/vegas.jpg",
-  "Tokyo": "images/tokyo.jpg",
-  "Banff": "images/banff.jpg"
-};
-
-function addToCart(text){
-  const li=document.createElement('li');
-  li.textContent=text;
-  qs('#cart').appendChild(li);
-}
-
-function renderActivities(dest){
+window.addEventListener('DOMContentLoaded',()=>{
   const box = qs('#activityChoices');
-  box.innerHTML = '';
-  activityMap[dest].forEach(name=>{
+  const reveal = qs('#vegasReveal');
+  const pop = qs('#destinationPop');
+
+  burstConfetti();
+  setTimeout(()=>burstFireworks(reveal), 250);
+  setTimeout(()=>flyPlane(), 500);
+  setTimeout(()=>{
+    pop.style.display = 'block';
+  }, 650);
+
+  vegasOptions.forEach(name=>{
     const btn = document.createElement('button');
     btn.className = 'btn';
     btn.dataset.activity = name;
     btn.textContent = name;
     box.appendChild(btn);
   });
-}
 
-window.addEventListener('DOMContentLoaded',()=>{
-  let chosenDest = null;
-  let chosenActivities = [];
+  const selected = [];
 
-  qs('#destChoices').addEventListener('click',(e)=>{
-    const pill = e.target.closest('.pill');
-    if(!pill) return;
-    qsa('#destChoices .pill').forEach(p=>p.classList.remove('selected'));
-    pill.classList.add('selected');
-    chosenDest = pill.dataset.dest;
-    chosenActivities = [];
-    qs('#cart').innerHTML = '';
-    addToCart('Destination: ' + chosenDest);
-    qs('#destPicked').textContent = chosenDest;
-    qs('#faveOption').textContent = chosenDest === 'Banff' ? 'My fave option 🥰' : '';
-    show(qs('#applauseDest'));
-    spark(qs('#applauseDest'));
-    renderActivities(chosenDest);
-    saveAnswer('tripDestination', chosenDest);
-  });
+  function addToCart(text){
+    const li=document.createElement('li');
+    li.textContent=text;
+    qs('#cart').appendChild(li);
+  }
+
+  addToCart('Destination: Las Vegas');
 
   qs('#activityChoices').addEventListener('click',(e)=>{
     const b = e.target.closest('button[data-activity]');
     if(!b) return;
     const name = b.dataset.activity;
-    chosenActivities.push(name);
+
+    selected.push(name);
     qs('#actPicked').textContent = name;
     show(qs('#applauseAct'));
     spark(qs('#applauseAct'));
-    addToCart('Activity: ' + name);
-    saveAnswer('tripActivities', chosenActivities.join(' | '));
+    addToCart('Claimed first: ' + name);
+    saveAnswer('tripDestination', 'Las Vegas');
+    saveAnswer('tripVegasPick', selected.join(' | '));
+
+    if(name === "Everything. I’m the birthday boy."){
+      qs('#extraMsg').textContent = 'As you should honestly 😂';
+    } else if(name === "Car racing"){
+      qs('#extraMsg').textContent = 'Vroom vroom, noted 😌';
+    } else if(name === "Sphere"){
+      qs('#extraMsg').textContent = 'Very futuristic of you.';
+    } else if(name === "Spa"){
+      qs('#extraMsg').textContent = 'Luxury king behavior.';
+    } else if(name === "Food + city lights"){
+      qs('#extraMsg').textContent = 'Elite taste, obviously.';
+    }
   });
 
   qs('#toFinale').addEventListener('click',()=>{
-    if(!chosenDest) return;
-    const wrap = qs('#destinationPop');
-    const img = qs('#destinationImg');
-    const label = qs('#destinationLabel');
-    img.src = imageMap[chosenDest];
-    label.textContent = chosenDest + ' confirmed 😌';
-    wrap.style.display = 'block';
-    flyPlane();
     burstConfetti();
     setTimeout(()=>window.location.href='gallery.html',1800);
   });
@@ -146,7 +95,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         <a data-nav href="love.html">u + me</a>
         <a data-nav href="prompts.html">Prompts</a>
         <a data-nav href="consent.html">Important Q</a>
-        <a data-nav href="trips.html" class="active">Trip Picker</a>
+        <a data-nav href="trips.html" class="active">Destination Unlocked</a>
         <a data-nav href="gallery.html">Love Letter</a>
         <a data-nav href="finale.html">Finale</a>
         <a data-nav href="credits.html">Credits</a>
@@ -155,43 +104,48 @@ window.addEventListener('DOMContentLoaded',()=>{
   </nav>
 
   <div class="container page">
-    <section class="card">
-      <h2>Build your birthday trip</h2>
+    <section class="card hero-glow center">
+      <span class="badge">Birthday Mission Briefing</span>
 
-      <h3 style="margin-top:12px">1) Destination</h3>
-      <div class="choices" id="destChoices">
-        <div class="pill" data-dest="Vancouver">Vancouver</div>
-        <div class="pill" data-dest="Costa Rica">Costa Rica</div>
-        <div class="pill" data-dest="Las Vegas">Las Vegas</div>
-        <div class="pill" data-dest="Tokyo">Tokyo</div>
-        <div class="pill" data-dest="Banff">Banff</div>
+      <h2 id="vegasReveal" style="font-size:clamp(30px,6vw,56px);margin-top:16px;">
+        Destination Unlocked
+      </h2>
+
+      <div class="big-response" style="display:block;margin-top:14px;font-size:clamp(28px,5vw,48px);">
+        You’re going to Las Vegas 😌
       </div>
+
+      <p style="margin-top:16px">
+        <strong>Fast cars, a little luxury, and your favorite girl.</strong><br/>
+        Now tell me what you’re claiming first.
+      </p>
 
       <p class="muted" style="margin-top:10px">I have 5 days including travel time so choose wisely 🥰</p>
 
-      <div class="applause" id="applauseDest" style="margin-top:8px">
-        <span>🎉</span><span>Locked in: <b id="destPicked">-</b></span>
+      <div id="destinationPop" class="destination-pop photo-frame" style="max-width:560px;margin:18px auto 0;">
+        <img id="destinationImg" src="images/vegas.jpg" alt="Las Vegas">
+        <div style="padding:12px 14px">
+          <strong>Las Vegas confirmed 😌</strong><br/>
+          <span class="muted">My fave option.</span>
+        </div>
       </div>
+    </section>
 
-      <p id="faveOption" class="muted" style="margin-top:8px;color:#ffd166;font-weight:700;"></p>
-
-      <h3 style="margin-top:18px">2) What are we doing there?</h3>
+    <section class="card">
+      <h3>What are you claiming first?</h3>
       <div class="choices" id="activityChoices"></div>
 
-      <div class="applause" id="applauseAct" style="margin-top:8px">
-        <span>👏</span><span>Added: <b id="actPicked">-</b></span>
+      <div class="applause" id="applauseAct" style="margin-top:12px">
+        <span>🎉</span><span>Added to cart: <b id="actPicked">-</b></span>
       </div>
 
-      <div class="card" style="margin-top:16px">
+      <p id="extraMsg" class="muted" style="margin-top:10px"></p>
+
+      <div class="card" style="margin-top:18px;text-align:left">
         <h3>Trip Cart</h3>
         <ul id="cart"></ul>
-        <button class="btn success" id="toFinale">Continue</button>
-      </div>
-
-      <div id="destinationPop" class="destination-pop photo-frame">
-        <img id="destinationImg" src="" alt="destination confirmation">
-        <div style="padding:12px 14px">
-          <strong id="destinationLabel"></strong>
+        <div class="mobile-safe-actions">
+          <button class="btn success" id="toFinale">Continue</button>
         </div>
       </div>
     </section>
