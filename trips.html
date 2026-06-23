@@ -23,7 +23,13 @@
     flex-wrap:wrap;
   }
   .mission-row:last-child{border-bottom:none}
-  .mission-label{color:#9fb0c3;font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase}
+  .mission-label{
+    color:#9fb0c3;
+    font-weight:700;
+    letter-spacing:.08em;
+    font-size:12px;
+    text-transform:uppercase;
+  }
   .mission-value{color:#fff;font-weight:800}
   .claim-stamp{
     display:none;
@@ -40,41 +46,80 @@
     to{opacity:1;transform:scale(1) rotate(-6deg)}
   }
   .destination-pop img{
-    box-shadow:0 0 30px rgba(255,77,109,.18);
+    box-shadow:0 0 30px rgba(255,209,102,.18);
   }
-  .vegas-glow{
-    animation:vegasPulse 2.2s ease-in-out infinite;
+  .morocco-glow{
+    animation:moroccoPulse 2.2s ease-in-out infinite;
   }
-  @keyframes vegasPulse{
+  @keyframes moroccoPulse{
     0%,100%{transform:scale(1)}
     50%{transform:scale(1.015)}
   }
-  .fly-plane{
-    font-size:92px !important;
-    top:18% !important;
+  .magic-reveal{
+    display:none;
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    background:linear-gradient(135deg, rgba(255,209,102,.20), rgba(255,123,84,.18));
+    border:1px solid rgba(255,255,255,.12);
+    color:#fff;
+    font-weight:900;
+    font-size:30px;
+    text-align:center;
+    animation:magicPop .5s ease;
   }
-  @media(max-width:640px){
-    .fly-plane{
-      font-size:72px !important;
-      top:16% !important;
-    }
+  @keyframes magicPop{
+    0%{opacity:0;transform:scale(.7) translateY(12px)}
+    100%{opacity:1;transform:scale(1) translateY(0)}
+  }
+  .passport-stamp{
+    display:none;
+    margin:18px auto 0;
+    width:max-content;
+    max-width:100%;
+    padding:12px 18px;
+    border:3px dashed rgba(255,209,102,.8);
+    color:#ffd166;
+    font-weight:900;
+    font-size:28px;
+    letter-spacing:.08em;
+    transform:rotate(-7deg);
+    border-radius:14px;
+    animation:stampIn .4s ease;
+  }
+  .mini-tiles{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px;
+    margin-top:16px;
+  }
+  .mini-tile{
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    text-align:center;
+    font-weight:700;
   }
 </style>
+
 <script type="module">
 import {spark, show, qs, saveAnswer, burstConfetti, flyPlane, burstFireworks} from './app.js';
 
-const vegasOptions = [
-  "Car racing",
-  "Sphere",
-  "Spa",
-  "Food + city lights",
+const moroccoOptions = [
+  "Luxury riad stay",
+  "Desert adventure",
+  "Spa + hammam",
+  "Food + rooftop views",
   "Everything. I’m the birthday boy."
 ];
 
 window.addEventListener('DOMContentLoaded',()=>{
   const box = qs('#activityChoices');
-  const reveal = qs('#vegasReveal');
+  const reveal = qs('#moroccoReveal');
   const pop = qs('#destinationPop');
+  const magic = qs('#magicReveal');
+  const stamp = qs('#passportStamp');
 
   burstConfetti();
   setTimeout(()=>burstFireworks(reveal), 250);
@@ -82,8 +127,12 @@ window.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>{
     pop.style.display = 'block';
   }, 650);
+  setTimeout(()=>{
+    magic.style.display = 'block';
+    stamp.style.display = 'block';
+  }, 900);
 
-  vegasOptions.forEach(name=>{
+  moroccoOptions.forEach(name=>{
     const btn = document.createElement('button');
     btn.className = 'btn';
     btn.dataset.activity = name;
@@ -99,7 +148,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     qs('#cart').appendChild(li);
   }
 
-  addToCart('Destination: Las Vegas');
+  addToCart('Destination: Morocco');
 
   qs('#activityChoices').addEventListener('click',(e)=>{
     const b = e.target.closest('button[data-activity]');
@@ -111,25 +160,25 @@ window.addEventListener('DOMContentLoaded',()=>{
     show(qs('#applauseAct'));
     spark(qs('#applauseAct'));
     addToCart('Claimed first: ' + name);
-    saveAnswer('tripDestination', 'Las Vegas');
-    saveAnswer('tripVegasPick', selected.join(' | '));
+    saveAnswer('tripDestination', 'Morocco');
+    saveAnswer('tripMoroccoPick', selected.join(' | '));
 
-    const stamp = qs('#claimStamp');
-    stamp.style.display = 'block';
-    stamp.textContent = 'CLAIMED';
-    setTimeout(()=>{ stamp.style.display = 'none'; }, 1200);
+    const claim = qs('#claimStamp');
+    claim.style.display = 'block';
+    claim.textContent = 'CLAIMED';
+    setTimeout(()=>{ claim.style.display = 'none'; }, 1200);
 
     if(name === "Everything. I’m the birthday boy."){
-  qs('#extraMsg').textContent = 'As expected from Moroccan royalty 😌';
-} else if(name === "Luxury riad stay"){
-  qs('#extraMsg').textContent = 'A Moroccan king has touched down 🇲🇦';
-} else if(name === "Desert adventure"){
-  qs('#extraMsg').textContent = 'The desert is receiving royalty today.';
-} else if(name === "Spa + hammam"){
-  qs('#extraMsg').textContent = 'This is very Moroccan king behavior.';
-} else if(name === "Food + rooftop views"){
-  qs('#extraMsg').textContent = 'Casablanca-level elegance has entered the chat.';
-}
+      qs('#extraMsg').textContent = 'As expected from Moroccan royalty 😌';
+    } else if(name === "Luxury riad stay"){
+      qs('#extraMsg').textContent = 'A Moroccan king has touched down 🇲🇦';
+    } else if(name === "Desert adventure"){
+      qs('#extraMsg').textContent = 'The desert is receiving royalty today.';
+    } else if(name === "Spa + hammam"){
+      qs('#extraMsg').textContent = 'This is very Moroccan king behavior.';
+    } else if(name === "Food + rooftop views"){
+      qs('#extraMsg').textContent = 'Casablanca-level elegance has entered the chat.';
+    }
   });
 
   qs('#toFinale').addEventListener('click',()=>{
@@ -168,18 +217,21 @@ window.addEventListener('DOMContentLoaded',()=>{
     <section class="card hero-glow center">
       <span class="badge">Birthday Mission Briefing</span>
 
-      <h2 id="vegasReveal" style="font-size:clamp(30px,6vw,56px);margin-top:16px;">
+      <h2 id="moroccoReveal" style="font-size:clamp(30px,6vw,56px);margin-top:16px;">
         Destination Unlocked
       </h2>
 
-      <div class="big-response vegas-glow" style="display:block;margin-top:14px;font-size:clamp(28px,5vw,48px);">
-        You’re going to Las Vegas 😌
+      <div class="big-response morocco-glow" style="display:block;margin-top:14px;font-size:clamp(28px,5vw,48px);">
+        You’re going to Morocco 😌
       </div>
 
       <p style="margin-top:16px">
-        <strong>Fast cars, a little luxury, and your favorite girl.</strong><br/>
+        <strong>Warm nights, beautiful views, a little luxury, and your favorite girl.</strong><br/>
         Now tell me what you’re claiming first.
       </p>
+
+      <div id="magicReveal" class="magic-reveal">MISSION: MOROCCO UNLOCKED ✨</div>
+      <div id="passportStamp" class="passport-stamp">APPROVED FOR DEPARTURE</div>
 
       <div class="mission-board">
         <div class="mission-row">
@@ -187,8 +239,8 @@ window.addEventListener('DOMContentLoaded',()=>{
           <div class="mission-value">Destination Unlocked</div>
         </div>
         <div class="mission-row">
-          <div class="mission-label">City</div>
-          <div class="mission-value">Las Vegas</div>
+          <div class="mission-label">City / Country</div>
+          <div class="mission-value">Morocco</div>
         </div>
         <div class="mission-row">
           <div class="mission-label">Passengers</div>
@@ -200,10 +252,17 @@ window.addEventListener('DOMContentLoaded',()=>{
         </div>
       </div>
 
+      <div class="mini-tiles">
+        <div class="mini-tile">🇲🇦 Confirmed</div>
+        <div class="mini-tile">✈️ Ticket locked</div>
+        <div class="mini-tile">🌙 Luxury mode</div>
+        <div class="mini-tile">🥂 Birthday energy</div>
+      </div>
+
       <div id="destinationPop" class="destination-pop photo-frame" style="max-width:560px;margin:18px auto 0;">
-        <img id="destinationImg" src="images/vegas.jpg" alt="Las Vegas">
+        <img id="destinationImg" src="images/morocco.jpg" alt="Morocco">
         <div style="padding:12px 14px">
-          <strong>Las Vegas confirmed 😌</strong>
+          <strong>Morocco confirmed 😌</strong>
         </div>
       </div>
     </section>
